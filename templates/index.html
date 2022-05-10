@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form method="POST">
+            <input type="submit"
+                   id="start"
+                   hidden>
+    </form>
+
+    <script>
+    document.body.addEventListener("keydown", function(e) {
+        if(e.key === 'Enter') {
+            document.getElementById("start").click();
+        }
+    });
+    </script>
+
+    <div style="background-color:{{ current_text_line_color }}">
+        <div class="d-flex justify-content-center">
+            <h1>{{ displayed_text_line }}</h1>
+        </div>
+    </div>
+
+{% endblock %}

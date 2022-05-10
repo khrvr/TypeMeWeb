@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form method="POST">
+        <input type="submit"
+               id="pressed"
+               name=""
+               hidden>
+    </form>
+
+    <script>
+    document.body.addEventListener("keydown", function(e) {
+       if (e.key === 'Shift') {
+           document.getElementById("pressed").name='shf';
+       }
+       else if (e.key === 'Enter') {
+           document.getElementById("pressed").name='ent';
+       }
+       else {
+           document.getElementById("pressed").name=(e.key);
+       }
+       document.getElementById("pressed").click();
+    });
+    </script>
+
+    <div style="background-color:{{ current_text_line_color }}">
+        <div class="d-flex justify-content-center">
+            <h1>{{ displayed_text_line }}</h1>
+        </div>
+    </div>
+
+{% endblock %}
