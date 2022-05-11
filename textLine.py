@@ -2,6 +2,7 @@ import string
 import time
 import threading
 import json
+import config
 
 allowed_chars = list(string.ascii_lowercase)
 
@@ -9,35 +10,24 @@ space_representor = "_"
 
 chars = 70
 
-session_time = 0
-session_mistakes = 0
-session_correct = 0
-session_cpm = 0
-session_perc = 0
-
-
 text_line_color = "#eee7e4"
 frozen_color = "#8f8a89"
-current_text_line_color = text_line_color
 
 
 def cpm_perc_update():
-    global session_cpm
-    if not session_time == 0:
-        session_cpm = (str(round(session_correct / (session_time / 60))) + "CPM")
+    if not config.session_time == 0:
+        config.session_cpm = (str(round(config.session_correct / (config.session_time / 60))) + "CPM")
     else:
-        session_cpm = "0 CPM"
-    global session_perc
-    if not session_correct + session_mistakes == 0:
-        session_perc = (str(round((session_correct / (session_correct + session_mistakes)) * 100)) + "%")
+        config.session_cpm = "0 CPM"
+    if not config.session_correct + config.session_mistakes == 0:
+        config.session_perc = (str(round((config.session_correct / (config.session_correct + config.session_mistakes)) * 100)) + "%")
     else:
-        session_perc = "0"
+        config.session_perc = "0"
 
 
 class TextLine:
     def __init__(self, filename):
-        global current_text_line_color
-        current_text_line_color = text_line_color
+        config.current_text_line_color = text_line_color
         self.filename = filename
         self.state = "initial"
         self.text = []
@@ -64,12 +54,9 @@ class TextLine:
         self.correct = 0
 
     def save_stats(self):
-        global session_time
-        session_time += time.time() - self.start_time
-        global session_mistakes
-        session_mistakes += self.mistakes
-        global session_correct
-        session_correct += self.correct
+        config.session_time += time.time() - self.start_time
+        config.session_mistakes += self.mistakes
+        config.session_correct += self.correct
         cpm_perc_update()
         self.reset_stats()
 
@@ -83,15 +70,13 @@ class TextLine:
         if self.state == "frozen":
             return
         self.state = "frozen"
-        global current_text_line_color
-        current_text_line_color = frozen_color
+        config.current_text_line_color = frozen_color
 
     def terminate_run(self):
         self.save_stats()
         with open('stats.json', 'w') as f:
-            json.dump([session_correct, session_mistakes, session_time], f)
-        global current_text_line_color
-        current_text_line_color = text_line_color
+            json.dump([config.session_correct, config.session_mistakes, config.session_time], f)
+        config.current_text_line_color = text_line_color
         self.text_point = 0
         self.state = "initial"
 
@@ -126,7 +111,6 @@ class TextLine:
         if self.state == "initial" or self.state == "ready to play":
             self.get_text()
             self.state = "playing"
-            global current_text_line_color
-            current_text_line_color = text_line_color
+            config.current_text_line_color = text_line_color
             self.reset_stats()
             self.stats_auto_save()

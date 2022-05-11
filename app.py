@@ -1,13 +1,14 @@
 from flask import Flask, render_template, request, url_for, redirect
+import config
 import textLine
 from textLine import TextLine
 import json
 
 app = Flask(__name__)
 
-text_line = TextLine("test_text.txt")
+text_line = TextLine('test_text.txt')
 
-default_message = "Press ENTER to start, SHIFT to pause"
+default_message = 'Press ENTER to start, SHIFT to pause'
 
 displayed_text_line = default_message
 
@@ -19,29 +20,31 @@ def index():
     global displayed_text_line
     displayed_text_line = default_message
     if request.method == 'POST':
-        if "restart" in request.form.keys():
+        if 'restart' in request.form.keys():
             pass
-        elif "stats" in request.form.keys():
+        elif 'stats' in request.form.keys():
             global stats_visible
             stats_visible = not stats_visible
         else:
             text_line.play()
             return redirect(url_for('running'))
     return render_template('index.html', displayed_text_line=displayed_text_line,
-                           current_text_line_color=textLine.current_text_line_color,
-                           visible=stats_visible, session_cpm=textLine.session_cpm,
-                           session_perc=textLine.session_perc)
+                           current_text_line_color=config.current_text_line_color,
+                           visible=stats_visible, session_cpm=config.session_cpm,
+                           session_perc=config.session_perc)
 
 
 @app.route('/running', methods=('GET', 'POST'))
 def running():
     global displayed_text_line
     displayed_text_line = text_line.update_text()
+    if text_line.state == 'initial':
+        return redirect(url_for('index'))
     if request.method == 'POST':
-        if "restart" in request.form.keys():
+        if 'restart' in request.form.keys():
             text_line.terminate_run()
             return redirect(url_for('index'))
-        elif "stats" in request.form.keys():
+        elif 'stats' in request.form.keys():
             global stats_visible
             stats_visible = not stats_visible
         else:
@@ -51,19 +54,20 @@ def running():
                 text_line.terminate_run()
                 return redirect(url_for('index'))
     return render_template('running.html', displayed_text_line=displayed_text_line,
-                           current_text_line_color=textLine.current_text_line_color,
-                           visible=stats_visible, session_cpm=textLine.session_cpm,
-                           session_perc=textLine.session_perc)
+                           current_text_line_color=config.current_text_line_color,
+                           visible=stats_visible, session_cpm=config.session_cpm,
+                           session_perc=config.session_perc)
 
 
 @app.before_first_request
 def upload_stats():
     try:
         with open('stats.json', 'r') as f:
-            [textLine.session_correct, textLine.session_mistakes, textLine.session_time] = json.load(f)
-    except FileNotFoundError:
+            [config.session_correct, config.session_mistakes, config.session_time] = json.load(f)
+    except Exception:
         pass
+    textLine.cpm_perc_update()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run()

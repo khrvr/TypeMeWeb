@@ -4,7 +4,7 @@
 
 ```bash
 git checkout dev
-python3 main.py 
+python3 app.py 
 ```
 
 ## Требования
