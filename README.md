@@ -15,7 +15,7 @@ python3 app.py
 
 Введите текст в файл test_text.txt, можно даже во время использования программы. Все буквы вашего текста станут маленькими, все лишние символы автоматически уберутся.
 
-![screenshot](https://github.com/khrvr/TypeMeWeb/blob/master/screenshot.png)
+![screenshot](https://github.com/khrvr/TypeMeWeb/blob/dev/screenshot.png)
 
 Печатайте.
 
