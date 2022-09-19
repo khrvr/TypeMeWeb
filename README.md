@@ -1,22 +1,17 @@
-# Клавиатурный тренажер
+# Typing trainer
 
-## Запуск
+## Run
 
 ```bash
-git checkout dev
 python3 app.py 
 ```
 
-## Требования
+## Usage
 
-Отсутствуют, pipreqs выдает пустой файл.
+Enter some text into test_text.txt. All letters will become lowercase, all unnecessary symbols will be automatically removed.
 
-## Использование
+![screenshot](https://github.com/khrvr/TypeMeWeb/blob/master/screenshot.png)
 
-Введите текст в файл test_text.txt, можно даже во время использования программы. Все буквы вашего текста станут маленькими, все лишние символы автоматически уберутся.
+Type.
 
-![screenshot](https://github.com/khrvr/TypeMeWeb/blob/main/screenshot.png)
-
-Печатайте.
-
-Статистика сохраняется между запусками в отдельном файле, потом подгружается в программу. Статистика обновляется даже во время печати. Ее можно посмотреть, нажав на stats.
+Press the "stats" button to see typing statistics.
