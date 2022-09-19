@@ -1,4 +1,4 @@
-# Typing trainer
+# Typing trainer web
 
 ## Run
 
